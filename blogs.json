@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "author": "rahul",
+    "title": "Blog 1",
+    "desc": "This is a demo blog",
+    "authorId": 3,
+    "likes": [
+      "raman",
+      "vansh"
+    ],
+    "likesCount": 2
+  },
+  {
+    "id": 2,
+    "author": "vansh",
+    "title": "Blog 2",
+    "desc": "This is a demo blog",
+    "authorId": 1,
+    "likes": [
+      "raman"
+    ],
+    "likesCount": 1
+  },
+  {
+    "id": 3,
+    "author": "raman",
+    "title": "Blog 3",
+    "desc": "This is a demo blog",
+    "authorId": 4,
+    "likes": [],
+    "likesCount": 0
+  }
+]
