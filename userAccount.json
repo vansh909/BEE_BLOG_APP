@@ -1,0 +1,51 @@
+[
+  {
+    "id": 1,
+    "userId": 1,
+    "user": "vansh",
+    "RequestsSent": [
+      2,
+      "vriti"
+    ],
+    "RequestsRecieved": [],
+    "followers": [],
+    "followersCount": 0,
+    "isPrivate": true,
+    "requestStatus": "No Requests"
+  },
+  {
+    "id": 2,
+    "userId": 2,
+    "user": "vriti",
+    "RequestsSent": [],
+    "RequestsRecieved": [],
+    "followers": [
+      "vansh"
+    ],
+    "followersCount": 1,
+    "isPrivate": false,
+    "requestStatus": "No Requests"
+  },
+  {
+    "id": 3,
+    "userId": 3,
+    "user": "ridhh",
+    "RequestsSent": [],
+    "RequestsRecieved": [],
+    "followers": [],
+    "followersCount": 0,
+    "isPrivate": false,
+    "requestStatus": "No Requests"
+  },
+  {
+    "id": 4,
+    "userId": 4,
+    "user": "raman",
+    "RequestsSent": [],
+    "RequestsRecieved": [],
+    "followers": [],
+    "followersCount": 0,
+    "isPrivate": true,
+    "requestStatus": "No Requests"
+  }
+]

@@ -1,0 +1,39 @@
+[
+  {
+    "id": 1,
+    "username": "vansh",
+    "email": "vansh@gmail.com",
+    "password": "$2b$10$bt6yicEbHILrWqkG32hajemXZXgwscXWn3OQSuLNsiP3SIarEH5Mi",
+    "role": "admin",
+    "isAdmin": true,
+    "isPrivate": true
+  },
+  {
+    "id": 2,
+    "username": "vriti",
+    "email": "vriti@gmail.com",
+    "password": "$2b$10$BUVMLJl4XrQqLbW8.VQyFeYa5jE2Pj/5M/cWZjOZ8C1dtnn9Knf8S",
+    "role": "user",
+    "isAdmin": false,
+    "isPrivate": false
+  },
+  {
+    "id": 3,
+    "username": "ridhh",
+    "email": "ridhh@gmail.com",
+    "password": "$2b$10$k3EEmnW93dv9LYn6n1vTpe48gbxKLKURqKEMjCjRn77Bgqs3Z5LWW",
+    "role": "user",
+    "isAdmin": false,
+    "isPrivate": false
+  },
+  {
+    "id": 4,
+    "username": "raman",
+    "email": "raman@gmail.com",
+    "password": "$2b$10$CeG9PVWrF.HoAu1UnTUzhuWgUxBLIkG8o8kn3SBigilVnJWqfO7G.",
+    "role": "admin",
+    "isAdmin": true,
+    "isPrivate": true,
+    "requestStatus": "No Requests"
+  }
+]
