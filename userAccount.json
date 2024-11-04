@@ -4,35 +4,48 @@
     "userId": 1,
     "user": "vansh",
     "RequestsSent": [
-      2,
-      "vriti"
+      "raman"
     ],
     "RequestsRecieved": [],
-    "followers": [],
-    "followersCount": 0,
+    "followers": [
+      "mayank"
+    ],
+    "following": [
+      "mayank"
+    ],
+    "followersCount": 1,
     "isPrivate": true,
-    "requestStatus": "No Requests"
+    "requestStatus": "No Requests!"
   },
   {
     "id": 2,
     "userId": 2,
-    "user": "vriti",
-    "RequestsSent": [],
-    "RequestsRecieved": [],
-    "followers": [
+    "user": "mayank",
+    "RequestsSent": [
       "vansh"
     ],
-    "followersCount": 1,
+    "RequestsRecieved": [],
+    "followers": [
+      "vansh",
+      "rahul"
+    ],
+    "following": [
+      "vansh"
+    ],
+    "followersCount": 2,
     "isPrivate": false,
     "requestStatus": "No Requests"
   },
   {
     "id": 3,
     "userId": 3,
-    "user": "ridhh",
+    "user": "rahul",
     "RequestsSent": [],
     "RequestsRecieved": [],
     "followers": [],
+    "following": [
+      "mayank"
+    ],
     "followersCount": 0,
     "isPrivate": false,
     "requestStatus": "No Requests"
@@ -42,10 +55,13 @@
     "userId": 4,
     "user": "raman",
     "RequestsSent": [],
-    "RequestsRecieved": [],
+    "RequestsRecieved": [
+      "vansh"
+    ],
     "followers": [],
+    "following": [],
     "followersCount": 0,
     "isPrivate": true,
-    "requestStatus": "No Requests"
+    "requestStatus": "Pending"
   }
 ]
