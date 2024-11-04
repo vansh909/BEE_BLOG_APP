@@ -11,7 +11,7 @@ const { error, log } = require("console");
 const userFilePath = path.join(__dirname, "./users.json");
 const blogFile = path.join(__dirname, "./blogs.json");
 const followFile = path.join(__dirname, "./userAccount.json");
-const secret_key = "supersecretkey"; // Single secret key for both users and admins
+const secret_key = "secretkey"; // Single secret key for both users and admins
 
 app.use(express.json());
 app.use(cookieParser());
@@ -47,7 +47,7 @@ const readBlogs = () => {
 const createBlog = (data) => {
     fs.writeFileSync(blogFile, JSON.stringify(data, null, 2), "utf-8");
 };
-
+//registering users
 app.post("/signup", (req, res) => {
     const { username, email, password } = req.body;
     if (!username || !password || !email) {
@@ -79,10 +79,7 @@ app.post("/signup", (req, res) => {
                     password: hash,
                     role: "admin",
                     isAdmin: true,
-                    // followers: [],
-                    // followerCount: 0,
-                    isPrivate: true,
-                    // requests: [],
+                    isPrivate: true,  
                 };
                 users.push(adminUser);
                 createUser(users);
@@ -98,6 +95,7 @@ app.post("/signup", (req, res) => {
                     RequestsSent: [],
                     RequestsRecieved: [],
                     followers: [],
+                    following:[],
                     followersCount: 0,
                     isPrivate: adminUser.isPrivate,
                     requestStatus: "No Requests",
@@ -123,10 +121,7 @@ app.post("/signup", (req, res) => {
                         username: adminUser.username,
                         email: adminUser.email,
                         role: adminUser.role,
-                        // followers: adminUser.followers,
-                        // followerCount: adminUser.followerCount,
                         isPrivate: adminUser.isPrivate,
-                        // requests: adminUser.requests,
                     },
                 });
             } else {
@@ -138,10 +133,7 @@ app.post("/signup", (req, res) => {
                     password: hash,
                     role: "user",
                     isAdmin: false,
-                    // followers: [],
-                    // followerCount: 0,
                     isPrivate: false,
-                    // requests: [],
                 };
                 users.push(newUser);
                 createUser(users);
@@ -156,6 +148,7 @@ app.post("/signup", (req, res) => {
                     RequestsSent: [],
                     RequestsRecieved: [],
                     followers: [],
+                    following:[],
                     followersCount: 0,
                     isPrivate: newUser.isPrivate,
                     requestStatus: "No Requests",
@@ -170,8 +163,6 @@ app.post("/signup", (req, res) => {
                         username: newUser.username,
                         email: newUser.email,
                         role: newUser.role,
-                        // followers: newUser.followers,
-                        // followerCount: newUser.followerCount,
                         isPrivate: newUser.isPrivate,
                     },
                 });
@@ -280,6 +271,7 @@ app.post("/admin", verifyUserOrAdmin, (req, res) => {
                 RequestsSent: [],
                 RequestsRecieved: [],
                 followers: [],
+                following:[],
                 followersCount: 0,
                 isPrivate: adminUser.isPrivate,
             };
@@ -294,8 +286,6 @@ app.post("/admin", verifyUserOrAdmin, (req, res) => {
                     email: adminUser.email,
                     role: adminUser.role,
                     isPrivate: adminUser.isPrivate,
-                    // followers: adminUser.followers,
-                    // followerCount: adminUser.followerCount,
                 },
             });
         });
@@ -316,6 +306,7 @@ app.get("/current", verifyUserOrAdmin, (req, res) => {
     });
 });
 
+//route for creating blogs
 app.post("/blogs", verifyUserOrAdmin, (req, res) => {
     const { title, desc } = req.body;
     if (!title || !desc) {
@@ -339,7 +330,15 @@ app.post("/blogs", verifyUserOrAdmin, (req, res) => {
         .status(201)
         .json({ message: "Blog created successfully", blog: newBlog });
 });
+//route for seeing all the blogs
 
+app.get("/blogs", (req, res)=>{
+    const blogs = readBlogs();
+    return res.status(200).json(blogs);
+})
+
+
+//route for updating blogs
 app.put("/blogs/:blogId", verifyUserOrAdmin, (req, res) => {
     const blogs = readBlogs();
     const { blogId } = req.params;
@@ -366,6 +365,7 @@ app.put("/blogs/:blogId", verifyUserOrAdmin, (req, res) => {
     return res.status(401).send("Blog not found");
 });
 
+//route for deleting the blogs
 app.delete("/blogs/:id", verifyUserOrAdmin, (req, res) => {
     const blogs = readBlogs();
     const { id } = req.params;
@@ -386,6 +386,8 @@ app.delete("/blogs/:id", verifyUserOrAdmin, (req, res) => {
     return res.status(400).send("You cannot delete this blog!");
 });
 
+
+//route for liking /unliking the blogs
 app.post("/blogs/:blogId/likes", verifyUserOrAdmin, (req, res) => {
     const blogId = req.params.blogId;
     const { username } = req.user;
@@ -420,7 +422,7 @@ app.get("/blogs", verifyUserOrAdmin, (req, res) => {
 });
 
 
-
+//route for sending follow-request
 app.post("/follow/send-request", verifyUserOrAdmin, (req, res) => {
     const { followeeId } = req.body;
     const user = req.user;
@@ -447,9 +449,10 @@ app.post("/follow/send-request", verifyUserOrAdmin, (req, res) => {
         followee.requestStatus = "Pending";
         follower.RequestsSent.push(followee.user);
         writeToFollowFile(followersFile);
-        return res.status(200).json(`Request sent!`);
+        return res.status(200).json("Request sent!");
     } else {
-        follower.RequestsSent.push(followee.user);
+        // follower.RequestsSent.push(followee.user);
+        follower.following.push(followee.user);
         followee.followers.push(user.username);
         followee.followersCount = followee.followers.length;
         writeToFollowFile(followersFile);
@@ -457,38 +460,58 @@ app.post("/follow/send-request", verifyUserOrAdmin, (req, res) => {
     }
 });
 
+//route for accepting the request
 app.post("/follow/accept-request", verifyUserOrAdmin, (req, res) => {
-    const { accepted } = req.body;
+
+    const { accepted, name } = req.body;
     if (!accepted) {
         return res.status(400).send("Invalid Request!");
     }
+
     const user = req.user;
     const userId = user.id;
     const followersFile = readFollower();
-    const follower = followersFile.find((a) => a.userId == userId);
-    if (follower.RequestsRecieved.length==0) {
+    // const requestSender = followersFile.find(a=>a.user == name)
+    const requestreciever = followersFile.find((a) => a.userId == userId);
+    if (requestreciever.RequestsRecieved.length==0) {
         return res.status(400).send("No Incoming request");
     }
     if (accepted == "yes") {
-        for (i = 0; i < follower.RequestsRecieved.length; i++) {
+        for (i = 0; i < requestreciever.RequestsRecieved.length; i++) {
             // follower.followers = follower.RequestsRecieved[i];
-            follower.followers.push(follower.RequestsRecieved[i])
-            follower.followersCount++;
+            // follower.followers.push(follower.RequestsRecieved[i])
+            if(requestreciever.RequestsRecieved[i] == name)
+            {
+
+                requestreciever.RequestsRecieved.splice(i, 1);
+                const requestSender = followersFile.find(a=>a.user == name);
+                requestSender.following.push(requestreciever.user);
+                requestreciever.followers.push(name);  
+                requestreciever.followersCount++;
+            }
+            
         }
-        follower.RequestsRecieved = [];
-        follower.requestStatus = "No Requests!";
+        // follower.RequestsRecieved = [];
+        requestreciever.requestStatus = "No Requests!";
         writeToFollowFile(followersFile);
         return res
             .status(200)
-            .json({ message: "All Request Accepted!", userDetails: follower });
+            .json({ message: "All Request Accepted!", userDetails: requestreciever });
     }
     else if (accepted=="no"){
-        follower.RequestsRecieved = [];
-        follower.requestStatus = "No Requests";
+        for(i =0; i<requestreciever.RequestsRecieved.length;i++)
+            {
+                if(requestreciever.RequestsRecieved[i]==name)
+                {
+                    requestreciever.RequestsRecieved.splice(i, 1);
+                }
+            }
+        
+            requestreciever.requestStatus = requestreciever.RequestsRecieved.length>0 ? "Pending":"No Requests";
         writeToFollowFile(followersFile);
         return res
             .status(200)
-            .json({message: "All Requests Denied!", userDetails: follower});
+            .json({message: "Request Denied!", userDetails: requestreciever});
     }
     else
     {
